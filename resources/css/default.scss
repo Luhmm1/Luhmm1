@@ -1,0 +1,595 @@
+@use "functions" as *;
+@use "mixins" as *;
+@use "sass:math";
+@use "variables" as *;
+
+/**********/
+/* Global */
+/**********/
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: hsl(195, 7%, 11%);
+  color: $light;
+  font-family: Lato, sans-serif;
+  word-spacing: rem(1px);
+}
+
+span.svg {
+  background-color: $white;
+  display: inline-flex;
+  height: rem(16px);
+  margin-right: rem(6px);
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  vertical-align: rem(-2px);
+  width: rem(16px);
+
+  &.bars {
+    mask-image: url("./../img/icons/bars-solid.svg");
+  }
+
+  &.book {
+    mask-image: url("./../img/icons/book-solid.svg");
+  }
+
+  &.building {
+    mask-image: url("./../img/icons/building-solid.svg");
+  }
+
+  &.calendar {
+    mask-image: url("./../img/icons/calendar-alt-solid.svg");
+  }
+
+  &.columns {
+    mask-image: url("./../img/icons/columns-solid.svg");
+  }
+
+  &.envelope {
+    mask-image: url("./../img/icons/envelope-solid.svg");
+  }
+
+  &.graduation-cap {
+    mask-image: url("./../img/icons/graduation-cap-solid.svg");
+  }
+
+  &.github {
+    mask-image: url("./../img/icons/github-brands.svg");
+  }
+
+  &.home {
+    mask-image: url("./../img/icons/home-solid.svg");
+  }
+
+  &.linkedin {
+    mask-image: url("./../img/icons/linkedin-brands.svg");
+  }
+
+  &.times {
+    mask-image: url("./../img/icons/times-solid.svg");
+  }
+
+  &.user {
+    mask-image: url("./../img/icons/user-solid.svg");
+  }
+}
+
+/***********/
+/* Sidebar */
+/***********/
+
+.open-sidebar {
+  background-color: #1b4f70;
+  border-radius: 50%;
+  bottom: rem(16px);
+  box-shadow: rem(2px) rem(2px) rem(4px) rgba(0, 0, 0, 0.75);
+  left: rem(16px);
+  padding: rem(16px);
+  position: fixed;
+  z-index: 900;
+
+  @include breakpoint(lg) {
+    display: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  span.svg {
+    display: flex;
+    height: rem(24px);
+    margin-right: 0;
+    mask-size: cover;
+    width: rem(24px);
+  }
+}
+
+aside {
+  background-color: hsl(210, 4%, 8%);
+  bottom: 0;
+  box-shadow: rem(1px) 0 rem(2px) rgba(0, 0, 0, 0.75);
+  color: $white;
+  left: calc(-100% - #{rem(2px)});
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  transition: left 0.5s ease, visibility 1s ease 2s;
+  visibility: hidden;
+  width: 100%;
+  z-index: 1000;
+
+  @include breakpoint(xs) {
+    left: rem(-322px);
+    width: rem(320px);
+  }
+
+  @include breakpoint(lg) {
+    left: 0;
+    max-width: rem(480px);
+    min-width: rem(320px);
+    visibility: visible;
+    width: 20%;
+  }
+
+  &.active {
+    left: 0;
+    transition: left 0.5s ease;
+    visibility: visible;
+  }
+
+  .close-sidebar {
+    position: absolute;
+    right: rem(24px);
+    top: rem(16px);
+
+    @include breakpoint(lg) {
+      display: none;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    span.svg {
+      display: flex;
+      height: rem(32px);
+      margin-right: 0;
+      width: rem(22px);
+    }
+  }
+
+  header {
+    margin: rem(24px) 0;
+
+    img {
+      border: rem(5px) solid hsl(210, 4%, 25%);
+      border-radius: 50%;
+      display: block;
+      height: rem(128px);
+      margin: 0 auto rem(16px) auto;
+      width: rem(128px);
+    }
+
+    p {
+      margin: 0;
+      text-align: center;
+
+      &:first-of-type {
+        font-size: rem(24px);
+        font-weight: bold;
+        margin-bottom: rem(8px);
+      }
+    }
+  }
+
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    a {
+      color: inherit;
+      display: block;
+      padding: rem(16px) rem(32px);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background-color 0.125s ease, color 0.125s ease;
+      width: 100%;
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          background-color: hsl(210, 4%, 5%);
+          color: $lightblue;
+
+          span.svg {
+            background-color: currentColor;
+          }
+        }
+      }
+
+      &.selected {
+        background-color: hsl(210, 4%, 5%);
+        color: $lightblue;
+
+        span.svg {
+          background-color: currentColor;
+        }
+      }
+    }
+  }
+}
+
+/****************/
+/* Main content */
+/****************/
+
+main {
+  width: 100%;
+
+  @include breakpoint(lg) {
+    padding-left: min(max(rem(320px), 20%), rem(480px));
+  }
+
+  .banner {
+    align-items: center;
+    background: url("./../img/background.webp") rgba(0, 0, 0, 0.75);
+    background-blend-mode: multiply;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    padding: 0 rem(16px);
+
+    @include breakpoint(xs) {
+      padding: 0 rem(32px);
+    }
+
+    h1,
+    h2 {
+      color: $white;
+      font-weight: normal;
+      margin: 0;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: rem(40px);
+      margin-bottom: rem(8px);
+    }
+
+    h2 {
+      font-size: rem(math.div(40px, 3));
+      word-spacing: rem(4px);
+    }
+
+    @include breakpoint(xs) {
+      h1 {
+        font-size: rem(48px);
+      }
+
+      h2 {
+        font-size: rem(math.div(48px, 3));
+      }
+    }
+
+    @include breakpoint(sm) {
+      h1 {
+        font-size: rem(64px);
+      }
+
+      h2 {
+        font-size: rem(math.div(64px, 3));
+      }
+    }
+
+    @include breakpoint(md) {
+      h1 {
+        font-size: rem(80px);
+      }
+
+      h2 {
+        font-size: rem(math.div(80px, 3));
+      }
+    }
+  }
+
+  section:not(.banner) {
+    padding: rem(96px) rem(16px) rem(144px) rem(16px);
+
+    @include breakpoint(xs) {
+      padding-left: rem(32px);
+      padding-right: rem(32px);
+    }
+
+    @include breakpoint(sm) {
+      padding-left: calc(50% - #{rem(250px)});
+      padding-right: calc(50% - #{rem(250px)});
+    }
+
+    @include breakpoint(md) {
+      padding-left: calc(50% - #{rem(300px)});
+      padding-right: calc(50% - #{rem(300px)});
+    }
+
+    @include breakpoint(xl) {
+      padding-left: calc(50% - #{rem(400px)});
+      padding-right: calc(50% - #{rem(400px)});
+    }
+
+    @include breakpoint(xxl) {
+      padding-left: calc(50% - #{rem(450px)});
+      padding-right: calc(50% - #{rem(450px)});
+    }
+
+    &:nth-of-type(2n) {
+      background-color: hsl(200, 6%, 10%);
+    }
+
+    h2 {
+      color: $white;
+      font-size: rem(32px);
+      margin: 0 0 rem(64px) 0;
+      text-align: center;
+      text-transform: uppercase;
+      word-spacing: rem(2px);
+
+      &::after {
+        border-bottom: rem(2px) solid $blue;
+        content: "";
+        display: block;
+        margin: 0 auto;
+        padding-top: rem(16px);
+        width: rem(128px);
+      }
+    }
+
+    & > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+/*********/
+/* About */
+/*********/
+
+.about {
+  p {
+    hyphens: auto;
+    margin: 0 0 rem(16px) 0;
+    text-align: justify;
+
+    &:last-of-type {
+      margin-bottom: rem(24px);
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin-top: 0;
+    padding: 0;
+    row-gap: rem(16px);
+
+    a {
+      color: $lightblue;
+      text-decoration: none;
+      transition: background-color 0.25s ease, color 0.25s ease;
+
+      &:hover {
+        color: $darkblue;
+      }
+
+      span.svg {
+        background-color: currentColor;
+      }
+    }
+  }
+}
+
+/***************************/
+/* Experiences & Education */
+/***************************/
+
+.experiences article,
+.education article {
+  border-left: rem(2px) solid $blue;
+  display: flex;
+  flex-direction: column;
+  padding-left: rem(24px);
+  position: relative;
+
+  &::before {
+    background-color: $blue;
+    border-radius: 50%;
+    content: "";
+    height: rem(14px);
+    left: rem(-8px);
+    position: absolute;
+    width: rem(14px);
+  }
+
+  &:not(:last-of-type) {
+    padding-bottom: rem(64px);
+  }
+
+  h3 {
+    color: $white;
+    font-size: rem(16px);
+    margin: 0 0 rem(4px) 0;
+    text-transform: uppercase;
+    word-spacing: rem(2px);
+  }
+
+  .date {
+    color: $lightblue;
+    margin: 0;
+    order: -1;
+    position: relative;
+    top: rem(-5px);
+
+    span.svg {
+      background-color: currentColor;
+    }
+  }
+
+  .location {
+    color: $lightblue;
+    font-size: rem(12px);
+    margin: 0 0 rem(16px) 0;
+    text-transform: uppercase;
+  }
+
+  .description {
+    hyphens: auto;
+    margin: 0;
+    text-align: justify;
+  }
+}
+
+/************/
+/* Services */
+/************/
+
+.services p {
+  margin-top: 0;
+}
+
+/*************/
+/* Portfolio */
+/*************/
+
+.portfolio .wrapper {
+  display: grid;
+  grid-gap: rem(24px);
+  grid-template-columns: 1fr;
+
+  @include breakpoint(sm) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include breakpoint(xl) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  a {
+    display: block;
+    margin: 0 auto;
+
+    &:focus,
+    &:hover {
+      outline: none;
+
+      figure {
+        img {
+          filter: opacity(15%);
+        }
+
+        figcaption {
+          transition-delay: 0.25s;
+          visibility: visible;
+        }
+      }
+    }
+
+    figure {
+      height: 100%;
+      margin: 0;
+      max-width: rem(300px);
+      position: relative;
+      width: 100%;
+
+      img {
+        border-radius: rem(8px);
+        height: 100%;
+        object-fit: cover;
+        transition: filter 0.5s ease;
+        width: 100%;
+      }
+
+      figcaption {
+        color: $lightblue;
+        font-size: rem(20px);
+        position: absolute;
+        text-align: center;
+        text-transform: uppercase;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: visibility 0.5s ease;
+        transition-delay: -1s;
+        visibility: hidden;
+        width: 100%;
+      }
+    }
+  }
+}
+
+/***********/
+/* Contact */
+/***********/
+
+.contact form {
+  fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+
+    @include breakpoint(sm) {
+      display: flex;
+      column-gap: rem(16px);
+    }
+  }
+
+  label {
+    display: block;
+    margin-bottom: rem(16px);
+    width: 100%;
+
+    span {
+      display: inline-block;
+      font-weight: bold;
+      margin-bottom: rem(8px);
+    }
+
+    input,
+    textarea {
+      border: rem(2px) solid hsl(0, 0%, 50%);
+      display: block;
+      padding: rem(16px);
+      transition: border-color 0.25s ease;
+      width: 100%;
+
+      &:focus {
+        border-color: $blue;
+        outline: none;
+      }
+    }
+
+    textarea {
+      height: rem(128px);
+    }
+  }
+
+  button {
+    background-color: $blue;
+    border: none;
+    color: $black;
+    padding: rem(12px) rem(32px);
+    text-transform: uppercase;
+    transition: filter 0.25s ease;
+
+    &:focus,
+    &:hover {
+      filter: opacity(60%);
+      outline: none;
+    }
+  }
+}

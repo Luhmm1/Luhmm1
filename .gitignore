@@ -1,0 +1,8 @@
+# JetBrains
+/.idea/
+
+# LICENSE files
+/docs/assets/*/*.LICENSE.txt
+
+# npm
+/node_modules/

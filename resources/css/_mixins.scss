@@ -1,0 +1,17 @@
+@use "variables" as *;
+
+@mixin breakpoint($breakpoint) {
+  @if type-of($breakpoint) == "number" {
+    @media (min-width: #{$breakpoint}) {
+      @content;
+    }
+  } @else {
+    @each $i, $v in $breakpoints {
+      @if $breakpoint == $i {
+        @media (min-width: #{$v}) {
+          @content;
+        }
+      }
+    }
+  }
+}
